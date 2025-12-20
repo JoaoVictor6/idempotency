@@ -1,7 +1,13 @@
-import type { Knex } from 'knex';
-import 'dotenv/config';
+// knexfile.js
+// This file is the entry point for the Knex CLI in CommonJS projects.
+// It directly defines the Knex configuration.
 
-const config: { [key: string]: Knex.Config } = {
+require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
+
+/**
+ * @type { import('knex').Knex.Config }
+ */
+const config = {
   development: {
     client: process.env.DB_CLIENT,
     connection: {
@@ -37,4 +43,4 @@ const config: { [key: string]: Knex.Config } = {
   },
 };
 
-export default config;
+module.exports = config;

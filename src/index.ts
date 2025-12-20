@@ -1,14 +1,23 @@
-const awsLambdaFastify = require('@fastify/aws-lambda');
-const Fastify = require('fastify');
-import { FastifyRequest, FastifyReply } from 'fastify';
+import awsLambdaFastify from '@fastify/aws-lambda';
+import Fastify from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+  ZodTypeProvider,
+} from 'fastify-type-provider-zod';
+import { userRoutes } from './domains/user/routes.js';
+import knex from './db/db.js';
 
 const app = Fastify({
-  logger: true
-});
+  logger: true,
+}).withTypeProvider<ZodTypeProvider>();
 
-app.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
-  return { hello: 'world' };
-});
+app.decorate('knex', knex);
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
+
+app.register(userRoutes, { prefix: '/user' });
 
 const start = async () => {
   try {
@@ -23,4 +32,4 @@ if (process.env.LOCAL) {
   start();
 }
 
-module.exports.handler = awsLambdaFastify(app);
+export const handler = awsLambdaFastify(app);

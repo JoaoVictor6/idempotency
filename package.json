@@ -6,8 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "LOCAL=true serverless offline start --reload",
-    "db:migrate": "knex migrate:latest --knexfile knexfile.ts",
-    "db:make-migration": "knex migrate:make --knexfile knexfile.ts -x ts"
+    "db:migrate": "knex migrate:latest --knexfile knexfile.js",
+    "db:make-migration": "knex migrate:make --knexfile knexfile.js -x ts",
+    "db:make-seed": "knex seed:make --knexfile knexfile.js -x ts",
+    "db:seed": "knex seed:run --knexfile knexfile.js",
+    "db:ui": "export $(grep -v '^#' .env | xargs) && lazysql \"postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DATABASE?sslmode=disable\""
   },
   "repository": {
     "type": "git",
@@ -16,7 +19,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/JoaoVictor6/idempotency/issues"
   },
@@ -25,10 +28,13 @@
     "@fastify/aws-lambda": "^6.3.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
+    "fastify-type-provider-zod": "^6.1.0",
     "knex": "^3.1.0",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@types/node": "^25.0.3",
     "serverless-offline": "^14.4.0",
     "ts-node": "^10.9.2",

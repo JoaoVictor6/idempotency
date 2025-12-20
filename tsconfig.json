@@ -1,17 +1,20 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
     "outDir": "dist",
+    "rootDir": "src",
     "strict": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "isolatedModules": false
+    "isolatedModules": true,
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false
   },
   "include": [
-    "src/**/*.ts",
-    "knexfile.ts",
-    "db/migrations/**/*.ts"
+    "src/**/*.ts"
   ]
 }
