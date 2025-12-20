@@ -1,2 +1,9 @@
 # idempotency
-Exemplos de idempotencia
+## Stack
+- Fastify
+- Typescript
+- knex
+- Node
+- Aws Lambda
+- Terraform
+- Serverless framework

@@ -1,0 +1,36 @@
+service: idempotency-service
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  environment:
+    NODE_ENV: production
+    REDIS_HOST: ${env:REDIS_HOST}
+    REDIS_PORT: ${env:REDIS_PORT}
+
+
+plugins:
+  - serverless-offline
+
+package:
+  individually: true
+
+functions:
+  api:
+    handler: src/index.handler # Assuming your Fastify app is exported as 'handler' in src/index.ts
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+
+resources:
+  Resources:
+    ServerlessDeploymentBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: idempotency-tests
+        VersioningConfiguration:
+          Status: Enabled
+

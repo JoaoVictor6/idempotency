@@ -1,0 +1,32 @@
+{
+  "name": "idempotency",
+  "version": "1.0.0",
+  "description": "- Fastify - Typescript - knex - Node - Aws Lambda - Terraform - Serverless framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "LOCAL=true serverless offline start --reload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoaoVictor6/idempotency.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/JoaoVictor6/idempotency/issues"
+  },
+  "homepage": "https://github.com/JoaoVictor6/idempotency#readme",
+  "dependencies": {
+    "@fastify/aws-lambda": "^6.3.0",
+    "fastify": "^5.6.2",
+    "knex": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "serverless-offline": "^14.4.0",
+    "typescript": "^5.9.3"
+  }
+}
