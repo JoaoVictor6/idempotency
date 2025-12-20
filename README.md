@@ -1,0 +1,2 @@
+# idempotency
+Exemplos de idempotencia
