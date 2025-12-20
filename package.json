@@ -10,7 +10,8 @@
     "db:make-migration": "knex migrate:make --knexfile knexfile.js -x ts",
     "db:make-seed": "knex seed:make --knexfile knexfile.js -x ts",
     "db:seed": "knex seed:run --knexfile knexfile.js",
-    "db:ui": "export $(grep -v '^#' .env | xargs) && lazysql \"postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DATABASE?sslmode=disable\""
+    "db:ui": "export $(grep -v '^#' .env | xargs) && lazysql \"postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DATABASE?sslmode=disable\"",
+    "simulate:race-condition": "node scripts/simulate_race_condition.mjs"
   },
   "repository": {
     "type": "git",
@@ -31,11 +32,16 @@
     "fastify-type-provider-zod": "^6.1.0",
     "knex": "^3.1.0",
     "pg": "^8.16.3",
+    "pg-query-stream": "^4.10.3",
     "zod": "^4.2.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "@types/node": "^25.0.3",
+    "chalk": "^5.6.2",
+    "node-fetch": "^3.3.2",
+    "ora": "^9.0.0",
+    "serverless-esbuild": "^1.56.1",
     "serverless-offline": "^14.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"

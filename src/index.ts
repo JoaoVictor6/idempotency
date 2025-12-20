@@ -6,6 +6,8 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import { userRoutes } from './domains/user/routes.js';
+import { paymentRoutes } from './domains/payment/routes.js';
+import { productRoutes } from './domains/product/routes.js';
 import knex from './db/db.js';
 
 const app = Fastify({
@@ -18,6 +20,8 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(userRoutes, { prefix: '/user' });
+app.register(paymentRoutes, { prefix: '/payment' });
+app.register(productRoutes, { prefix: '/product' });
 
 const start = async () => {
   try {

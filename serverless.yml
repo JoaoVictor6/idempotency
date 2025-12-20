@@ -1,24 +1,20 @@
 service: idempotency-service
 
-provider:
-  name: aws
-  runtime: nodejs18.x
-  environment:
-    NODE_ENV: production
-    REDIS_HOST: ${env:REDIS_HOST}
-    REDIS_PORT: ${env:REDIS_PORT}
-    DB_CLIENT: ${env:DB_CLIENT}
-    DB_HOST: ${env:DB_HOST}
-    DB_PORT: ${env:DB_PORT}
-    DB_USER: ${env:DB_USER}
-    DB_PASSWORD: ${env:DB_PASSWORD}
-    DB_DATABASE: ${env:DB_DATABASE}
-
 plugins:
   - serverless-offline
 
 package:
   individually: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    external:
+      - knex
+      - pg
+      - 'knex/lib/dialects/*'
 
 functions:
   api:

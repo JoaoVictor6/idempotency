@@ -1,11 +1,8 @@
-
 import knex from 'knex';
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
-
-const environment = process.env.NODE_ENV || 'development';
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const config = {
   client: process.env.DB_CLIENT,
@@ -15,12 +12,6 @@ const config = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-  },
-  migrations: {
-    directory: './db/migrations',
-  },
-  seeds: {
-    directory: './db/seeds',
   },
 };
 
