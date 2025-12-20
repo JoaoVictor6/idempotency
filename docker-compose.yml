@@ -4,3 +4,17 @@ services:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+
+  postgres:
+    image: "postgres:alpine"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: idempotency_db
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G

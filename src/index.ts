@@ -1,11 +1,12 @@
-import awsLambdaFastify from '@fastify/aws-lambda';
-import Fastify from 'fastify';
+const awsLambdaFastify = require('@fastify/aws-lambda');
+const Fastify = require('fastify');
+import { FastifyRequest, FastifyReply } from 'fastify';
 
 const app = Fastify({
   logger: true
 });
 
-app.get('/', async (request, reply) => {
+app.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
   return { hello: 'world' };
 });
 
@@ -22,4 +23,4 @@ if (process.env.LOCAL) {
   start();
 }
 
-export const handler = awsLambdaFastify(app);
+module.exports.handler = awsLambdaFastify(app);
