@@ -19,6 +19,7 @@ custom:
 functions:
   api:
     handler: src/index.handler # Assuming your Fastify app is exported as 'handler' in src/index.ts
+    timeout: 6
     events:
       - http:
           path: /{proxy+}

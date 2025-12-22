@@ -20,7 +20,7 @@ export async function paymentRoutes(fastify: FastifyInstance) {
         body: purchaseBodySchema,
       },
     },
-    async (request) => {
+    async (request, reply) => {
       const { userId, productId } = request.body;
 
       const existingPayment = await fastify
@@ -37,9 +37,14 @@ export async function paymentRoutes(fastify: FastifyInstance) {
           payment: existingPayment,
         };
       }
+      const idempotenceKey = fastify.idempotency.createIdempotencyKey("payment", String(productId), String(userId))
+      if (await fastify.idempotency.exists(idempotenceKey)) {
+        return reply.status(204).send("")
+      }
+      await fastify.idempotency.save(idempotenceKey)
 
       // Artificial delay to simulate a long-running process
-      await sleep(2000);
+      await sleep(1000);
 
       const [newPayment] = await fastify
         .knex<Payment>('payments')

@@ -9,12 +9,19 @@ import { userRoutes } from './domains/user/routes.js';
 import { paymentRoutes } from './domains/payment/routes.js';
 import { productRoutes } from './domains/product/routes.js';
 import knex from './db/db.js';
+import { idempotency } from './domains/idempotency/index.js';
+import redisClient from './redis/client.js';
 
 const app = Fastify({
   logger: true,
 }).withTypeProvider<ZodTypeProvider>();
 
 app.decorate('knex', knex);
+const FIVE_MINUTES = 60 * 5
+app.decorate(
+  'idempotency',
+  idempotency(redisClient, FIVE_MINUTES)
+)
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);

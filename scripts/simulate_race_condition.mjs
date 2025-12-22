@@ -47,43 +47,76 @@ async function run() {
 
   const spinner = ora('Sending two concurrent requests...').start();
 
-  const promises = [
+  const requestFn = () =>
     fetch(`${BASE_URL}/payment/purchase`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    }).then((res) => res.json()),
-    fetch(`${BASE_URL}/payment/purchase`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    }).then((res) => res.json()),
-  ];
+    });
+
+  const promises = [requestFn(), requestFn()];
 
   try {
-    const results = await Promise.all(promises);
+    const responses = await Promise.all(promises);
     spinner.succeed('Concurrent requests finished!');
+
+    const results = await Promise.all(
+      responses.map(async (res) => {
+        return {
+          status: res.status,
+          body: res.status === 204 ? null : await res.json().catch(() => null),
+        };
+      }),
+    );
 
     console.log(chalk.green('\n--- Results ---'));
     results.forEach((result, index) => {
-      console.log(chalk.yellow(`Request ${index + 1}:`));
-      console.log(result);
+      console.log(
+        chalk.yellow(`Request ${index + 1} (Status: ${result.status}):`),
+      );
+      console.log(result.body);
     });
     console.log(chalk.green('--- End Results ---\n'));
 
-    if (results[0].payment && results[1].payment && results[0].payment.id === results[1].payment.id) {
-      console.log(chalk.green('Race condition avoided! Both requests point to the same payment.'));
-      return;
-    }
+    const [res1, res2] = results;
 
-    if (results[0].message === 'Payment successful' && results[1].message === 'Payment successful') {
-      console.log(chalk.red('Race condition detected! Two different payments were created.'));
-      return;
-    }
+    const successfulCreationStatuses = [200, 201];
+    const idempotencySuccessStatus = 204;
 
-    // If we reach here, it means the race condition was avoided for other reasons
-    // (e.g., one request failed, or one was a successful idempotent response)
-    console.log(chalk.green('Race condition avoided!'));
+    const res1Created = successfulCreationStatuses.includes(res1.status);
+    const res2Created = successfulCreationStatuses.includes(res2.status);
+
+    const res1Idempotent = res1.status === idempotencySuccessStatus;
+    const res2Idempotent = res2.status === idempotencySuccessStatus;
+
+    if (
+      res1Created &&
+      res2Created &&
+      res1.body?.payment?.id !== res2.body?.payment?.id
+    ) {
+      console.log(
+        chalk.red('Race condition detected! Two different payments were created.'),
+      );
+    } else if (
+      res1Created &&
+      res2Created &&
+      res1.body?.payment?.id === res2.body?.payment?.id
+    ) {
+      console.log(
+        chalk.green('Race condition avoided! Both requests resolved to the same payment.'),
+      );
+    } else if ((res1Created && res2Idempotent) || (res1Idempotent && res2Created)) {
+      console.log(
+        chalk.green('Race condition avoided! One request created the payment, the other was handled idempotently.'),
+      );
+    } else if (res1Idempotent && res2Idempotent) {
+      console.log(
+        chalk.green('Race condition avoided! Both requests were handled idempotently (payment may have existed already).'),
+      );
+    } else {
+      console.log(chalk.yellow('Simulation finished with an unexpected outcome.'));
+      console.log('Response statuses:', results.map((r) => r.status));
+    }
   } catch (error) {
     spinner.fail('An error occurred during the simulation.');
     console.error(chalk.red(error));
