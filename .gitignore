@@ -1,8 +1,9 @@
 # Nestjs specific
+.serverless/*
 /dist
 /node_modules
 .env
-
+/dist
 /build
 /tmp
 
