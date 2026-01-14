@@ -6,10 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "LOCAL=true serverless offline start --reload",
-    "db:migrate": "knex migrate:latest --knexfile knexfile.js",
-    "db:make-migration": "knex migrate:make --knexfile knexfile.js -x ts",
-    "db:make-seed": "knex seed:make --knexfile knexfile.js -x ts",
-    "db:seed": "knex seed:run --knexfile knexfile.js",
+    "db:migrate": "knex migrate:latest --knexfile knexfile.cjs",
+    "db:make-migration": "knex migrate:make --knexfile knexfile.cjs -x ts",
+    "db:make-seed": "knex seed:make --knexfile knexfile.cjs -x ts",
+    "db:seed": "knex seed:run --knexfile knexfile.cjs",
     "db:ui": "export $(grep -v '^#' .env | xargs) && lazysql \"postgresql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_DATABASE?sslmode=disable\"",
     "simulate:race-condition": "node scripts/simulate_race_condition.mjs"
   },
