@@ -25,3 +25,9 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+# Terraform generated files
+.terraform/
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
